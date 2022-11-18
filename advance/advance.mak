@@ -3,10 +3,8 @@
 
 ifeq ($(CONF_TINY),yes)
 OBJ = obj/mame-tiny/$(BINARYDIR)
-MESSOBJ = obj/mess-tiny/$(BINARYDIR)
 else
 OBJ = obj/mame/$(BINARYDIR)
-MESSOBJ = obj/mess/$(BINARYDIR)
 endif
 MENUOBJ = obj/menu/$(BINARYDIR)
 MOBJ = obj/m/$(BINARYDIR)
@@ -31,42 +29,6 @@ MAME_INSTALL_DATAFILES = $(srcdir)/support/event.dat \
 	$(srcdir)/support/hiscore.dat \
 	$(srcdir)/support/cheat.dat \
 	$(srcdir)/support/category.ini
-# Freely available roms: http://www.mame.net/roms/
-MAME_INSTALL_ROMFILES = $(srcdir)/support/free/rom/gridlee.zip \
-	$(srcdir)/support/free/rom/polyplay.zip \
-	$(srcdir)/support/free/rom/robby.zip
-MAME_INSTALL_SAMPLEFILES = $(srcdir)/support/free/rom/gridlee.zip
-MAME_INSTALL_SNAPFILES = $(srcdir)/support/free/snap/gridlee.zip \
-	$(srcdir)/support/free/snap/polyplay.zip \
-	$(srcdir)/support/free/snap/robby.zip
-MESS_INSTALL_BINFILES = $(MESSOBJ)/advmess$(EXE)
-MESS_INSTALL_MANFILES = $(srcdir)/support/advmess.1
-MESS_INSTALL_DATAFILES = $(srcdir)/support/sysinfo.dat
-# Freely available systems: http://www.mess.org/freely_available_systems#texas_instruments_ti-994a_and_ti-998
-MESS_INSTALL_ROMFILES = $(srcdir)/support/free/rom/ti99_4a.zip
-MESS_INSTALL_IMAGEFILES_TI99_4A = \
-	$(srcdir)/support/free/image/ti99_4a/alpiner.zip \
-	$(srcdir)/support/free/image/ti99_4a/attack.zip \
-	$(srcdir)/support/free/image/ti99_4a/carwars.zip \
-	$(srcdir)/support/free/image/ti99_4a/munchmn.zip \
-	$(srcdir)/support/free/image/ti99_4a/parsec.zip \
-	$(srcdir)/support/free/image/ti99_4a/ti-inva.zip \
-	$(srcdir)/support/free/image/ti99_4a/tombcit.zip \
-	$(srcdir)/support/free/image/ti99_4a/v-chess.zip \
-	$(srcdir)/support/free/image/ti99_4a/vidgam1.zip \
-	$(srcdir)/support/free/image/ti99_4a/vidgam2.zip
-MESS_INSTALL_SNAPFILES = $(srcdir)/support/free/snap/ti99_4a.png
-MESS_INSTALL_SNAPFILES_TI99_4A = \
-	$(srcdir)/support/free/snap/ti99_4a/alpiner.zip \
-	$(srcdir)/support/free/snap/ti99_4a/attack.zip \
-	$(srcdir)/support/free/snap/ti99_4a/carwars.zip \
-	$(srcdir)/support/free/snap/ti99_4a/munchmn.zip \
-	$(srcdir)/support/free/snap/ti99_4a/parsec.zip \
-	$(srcdir)/support/free/snap/ti99_4a/ti-inva.zip \
-	$(srcdir)/support/free/snap/ti99_4a/tombcit.zip \
-	$(srcdir)/support/free/snap/ti99_4a/v-chess.zip \
-	$(srcdir)/support/free/snap/ti99_4a/vidgam1.zip \
-	$(srcdir)/support/free/snap/ti99_4a/vidgam2.zip
 MENU_INSTALL_BINFILES = $(MENUOBJ)/advmenu$(EXE)
 MENU_INSTALL_MANFILES = $(DOCOBJ)/advmenu.1
 CFG_INSTALL_BINFILES = $(CFGOBJ)/advcfg$(EXE)
@@ -95,14 +57,6 @@ INSTALL_MANFILES += $(MAME_INSTALL_MANFILES)
 INSTALL_ROMFILES += $(MAME_INSTALL_ROMFILES)
 INSTALL_SAMPLEFILES += $(MAME_INSTALL_SAMPLEFILES)
 INSTALL_SNAPFILES += $(MAME_INSTALL_SNAPFILES)
-OBJ_DIRS += $(MESSOBJ)
-INSTALL_BINFILES += $(MESS_INSTALL_BINFILES)
-INSTALL_DATAFILES += $(MESS_INSTALL_DATAFILES)
-INSTALL_MANFILES += $(MESS_INSTALL_MANFILES)
-INSTALL_ROMFILES += $(MESS_INSTALL_ROMFILES)
-INSTALL_IMAGEFILES_TI99_4A += $(MESS_INSTALL_IMAGEFILES_TI99_4A)
-INSTALL_SNAPFILES += $(MESS_INSTALL_SNAPFILES)
-INSTALL_SNAPFILES_TI99_4A += $(MESS_INSTALL_SNAPFILES_TI99_4A)
 endif
 ifneq ($(wildcard $(srcdir)/advance/menu.mak),)
 OBJ_DIRS += $(MENUOBJ)
@@ -164,8 +118,7 @@ endif
 
 all: $(OBJ_DIRS) $(INSTALL_BINFILES) $(INSTALL_DOCFILES) $(INSTALL_MANFILES)
 mame: $(OBJ) $(OBJ)/advmame$(EXE)
-mess: $(MESSOBJ) $(MESSOBJ)/advmess$(EXE)
-emu: mame mess
+emu: mame
 menu: $(MENUOBJ) $(MENUOBJ)/advmenu$(EXE)
 cfg: $(CFGOBJ) $(CFGOBJ)/advcfg$(EXE)
 v: $(VOBJ) $(VOBJ)/advv$(EXE)
@@ -384,12 +337,10 @@ install-dirs:
 	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/sample
 	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/artwork
 	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/image
-	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/image/ti99_4a
 	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/crc
 	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/snap
-	-$(INSTALL_DATA_DIR) $(DESTDIR)$(pkgdir)/snap/ti99_4a
 
-install-data: $(INSTALL_DATAFILES) $(INSTALL_ROMFILES) $(INSTALL_IMAGEFILES_TI99_4A) $(INSTALL_SAMPLEFILES) $(INSTALL_SNAPFILES) $(INSTALL_SNAPFILES_TI99_4A)
+install-data: $(INSTALL_DATAFILES) $(INSTALL_ROMFILES) $(INSTALL_SAMPLEFILES) $(INSTALL_SNAPFILES)
 ifdef INSTALL_DATAFILES
 	@for i in $(INSTALL_DATAFILES); do \
 		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)"; \
@@ -402,12 +353,6 @@ ifdef INSTALL_ROMFILES
 		$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/rom; \
 	done
 endif
-ifdef INSTALL_IMAGEFILES_TI99_4A
-	@for i in $(INSTALL_IMAGEFILES_TI99_4A); do \
-		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/image/ti99_4a"; \
-		$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/image/ti99_4a; \
-	done
-endif
 ifdef INSTALL_SAMPLEFILES
 	@for i in $(INSTALL_SAMPLEFILES); do \
 		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/sample"; \
@@ -418,12 +363,6 @@ ifdef INSTALL_SNAPFILES
 	@for i in $(INSTALL_SNAPFILES); do \
 		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/snap"; \
 		$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/snap; \
-	done
-endif
-ifdef INSTALL_SNAPFILES_TI99_4A
-	@for i in $(INSTALL_SNAPFILES_TI99_4A); do \
-		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/snap/ti99_4a"; \
-		$(INSTALL_DATA) $$i $(DESTDIR)$(pkgdir)/snap/ti99_4a; \
 	done
 endif
 
@@ -494,10 +433,8 @@ uninstall-dirs:
 	-rmdir $(DESTDIR)$(pkgdir)/rom
 	-rmdir $(DESTDIR)$(pkgdir)/sample
 	-rmdir $(DESTDIR)$(pkgdir)/artwork
-	-rmdir $(DESTDIR)$(pkgdir)/image/ti99_4a
 	-rmdir $(DESTDIR)$(pkgdir)/image
 	-rmdir $(DESTDIR)$(pkgdir)/crc
-	-rmdir $(DESTDIR)$(pkgdir)/snap/ti99_4a
 	-rmdir $(DESTDIR)$(pkgdir)/snap
 	-rmdir $(DESTDIR)$(pkgdir)
 	-rmdir $(DESTDIR)$(pkgdocdir)
@@ -558,7 +495,6 @@ DEB_REVISION = 1
 
 DEB_BINFILES = \
 	$(MAME_INSTALL_BINFILES) \
-	$(MESS_INSTALL_BINFILES) \
 	$(MENU_INSTALL_BINFILES) \
 	$(CFG_INSTALL_BINFILES) \
 	$(V_INSTALL_BINFILES) \
@@ -569,7 +505,6 @@ DEB_BINFILES = \
 	$(BLUE_INSTALL_BINFILES)
 DEB_MANFILES = \
 	$(MAME_INSTALL_MANFILES) \
-	$(MESS_INSTALL_MANFILES) \
 	$(MENU_INSTALL_MANFILES) \
 	$(CFG_INSTALL_MANFILES) \
 	$(V_INSTALL_MANFILES) \
@@ -580,12 +515,9 @@ DEB_MANFILES = \
 	$(BLUE_INSTALL_MANFILES)
 DEB_DATAFILES = \
 	$(MAME_INSTALL_DATAFILES) \
-	$(MESS_INSTALL_DATAFILES)
-DEB_ROMFILES = $(MAME_INSTALL_ROMFILES) $(MESS_INSTALL_ROMFILES)
-DEB_IMAGEFILES_TI99_4A = $(MESS_INSTALL_IMAGEFILES_TI99_4A)
+DEB_ROMFILES = $(MAME_INSTALL_ROMFILES)
 DEB_SAMPLEFILES = $(MAME_INSTALL_SAMPLEFILES)
-DEB_SNAPFILES = $(MAME_INSTALL_SNAPFILES) $(MESS_INSTALL_SNAPFILES)
-DEB_SNAPFILES_TI99_4A = $(MESS_INSTALL_SNAPFILES_TI99_4A)
+DEB_SNAPFILES = $(MAME_INSTALL_SNAPFILES)
 DEB_DOCFILES = $(INSTALL_DOCFILES)
 DEB_MACHINE = $(subst armv7l,armhf,$(subst i686,i386,$(subst x86_64,amd64,$(shell uname -m))))
 DEB_DIST_FILE_BIN = advancemame_$(VERSION)-$(DEB_REVISION)_$(DEB_MACHINE)
@@ -605,21 +537,17 @@ deb:
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/doc/advance
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance/image
-	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance/image/ti99_4a
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance/rom
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance/sample
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance/snap
-	mkdir $(DEB_DIST_DIR_BIN)/usr/local/share/advance/snap/ti99_4a
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/man
 	mkdir $(DEB_DIST_DIR_BIN)/usr/local/man/man1
 	cp $(DEB_BINFILES) $(DEB_DIST_DIR_BIN)/usr/local/bin
 	cp $(DEB_DOCFILES) $(DEB_DIST_DIR_BIN)/usr/local/share/doc/advance
 	cp $(DEB_DATAFILES) $(DEB_DIST_DIR_BIN)/usr/local/share/advance
 	cp $(DEB_ROMFILES) $(DEB_DIST_DIR_BIN)/usr/local/share/advance/rom
-	cp $(DEB_IMAGEFILES_TI99_4A) $(DEB_DIST_DIR_BIN)/usr/local/share/advance/image/ti99_4a
 	cp $(DEB_SAMPLEFILES) $(DEB_DIST_DIR_BIN)/usr/local/share/advance/sample
 	cp $(DEB_SNAPFILES) $(DEB_DIST_DIR_BIN)/usr/local/share/advance/snap
-	cp $(DEB_SNAPFILES_TI99_4A) $(DEB_DIST_DIR_BIN)/usr/local/share/advance/snap/ti99_4a
 	cp $(DEB_MANFILES) $(DEB_DIST_DIR_BIN)/usr/local/man/man1
 	find $(DEB_DIST_DIR_BIN)
 	dpkg-deb --build $(DEB_DIST_DIR_BIN)
