@@ -353,6 +353,8 @@ static WRITE32_HANDLER( fghthist_eeprom_w )
 		EEPROM_set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
 		EEPROM_write_bit(data & 0x10);
 		EEPROM_set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		
+		deco32_pri_w(space,0,data&0x1,0xffffffff); /* Bit 0 - layer priority toggle */
 	}
 	else if (mem_mask&0x0000ff00)
 	{
