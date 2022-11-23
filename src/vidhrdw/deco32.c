@@ -1439,7 +1439,7 @@ VIDEO_UPDATE( fghthist )
 		tilemap_draw(bitmap,cliprect,pf3_tilemap,0,0);
 		tilemap_draw(bitmap,cliprect,pf2_tilemap,0,2);
 	}
-	fghthist_draw_sprites(bitmap,buffered_spriteram32,3,0, 0xf);
+	fghthist_drawsprites(bitmap,buffered_spriteram32,3,0, 0xf);
 	tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
 }
 
